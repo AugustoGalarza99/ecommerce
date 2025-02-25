@@ -1,34 +1,71 @@
-.login-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #1e2a44 0%, #2c3e50 100%);
-  }
-  
-  .login-container h2 {
-    font-size: 2rem;
-    color: #ffffff;
-    margin-bottom: 20px;
-  }
-  
-  .google-btn {
-    background: #4285f4;
-    color: #ffffff;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 8px;
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition: background 0.3s ease;
-  }
-  
-  .google-btn:hover {
-    background: #357abd;
-  }
-  
-  .error-message {
-    color: #e53e3e;
-    margin-bottom: 20px;
-  }
+.login-dropdown {
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.login-options, .logged-in {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.login-btn {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.login-btn.google {
+  background-color: #db4437;
+  color: white;
+}
+
+.login-btn.google:hover {
+  background-color: #c23321;
+}
+
+.login-btn.facebook {
+  background-color: #3b5998;
+  color: white;
+}
+
+.login-btn.facebook:hover {
+  background-color: #2d4373;
+}
+
+.login-btn.email {
+  background-color: #666;
+  color: white;
+}
+
+.login-btn.email:hover {
+  background-color: #444;
+}
+
+.logout-btn {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  background-color: #f44336;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: #da190b;
+}
+
+.error-message {
+  color: #f44336;
+  font-size: 12px;
+  margin-bottom: 10px;
+}

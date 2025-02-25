@@ -2,9 +2,10 @@ import { useCart } from "../../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import { db } from "../../firebaseConfig";
 import { doc, addDoc, collection } from "firebase/firestore";
+import "./Cart.css";
 
 function Cart() {
-  const { cart, clearCart } = useCart();
+  const { cart, clearCart, removeFromCart } = useCart();
   const navigate = useNavigate();
 
   const handleCheckout = async () => {
@@ -20,27 +21,38 @@ function Cart() {
       status: "pending",
     };
 
-    await addDoc(collection(db, "orders"), order);
-    clearCart();
-    alert("Compra realizada con éxito");
-    navigate("/orders");
+    try {
+      await addDoc(collection(db, "orders"), order);
+      clearCart();
+      alert("Compra realizada con éxito");
+      navigate("/orders");
+    } catch (err) {
+      console.error("Error al finalizar compra:", err);
+      alert("Error al realizar la compra");
+    }
   };
 
+  if (cart.length === 0) {
+    return (
+      <div className="cart-dropdown empty">
+        <p>Tu carrito está vacío</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="cart-container">
-      <h2>Carrito</h2>
-      {cart.length === 0 ? (
-        <p>El carrito está vacío</p>
-      ) : (
-        <>
-          <ul>
-            {cart.map((item, index) => (
-              <li key={index}>{item.name} - ${item.price}</li>
-            ))}
-          </ul>
-          <button onClick={handleCheckout}>Finalizar Compra</button>
-        </>
-      )}
+    <div className="cart-dropdown">
+      <ul>
+        {cart.map((item, index) => (
+          <li key={index} className="cart-item">
+            <span>{item.name} - ${item.price.toFixed(2)}</span>
+            <button onClick={() => removeFromCart(item)} className="remove-btn">Eliminar</button>
+          </li>
+        ))}
+      </ul>
+      <div className="cart-actions">
+        <button onClick={handleCheckout} className="checkout-btn">Finalizar Compra</button>
+      </div>
     </div>
   );
 }

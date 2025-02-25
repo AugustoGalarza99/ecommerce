@@ -41,9 +41,8 @@ function Navbar() {
           <li><Link to="/cart" onClick={() => setMenuOpen(false)}>Carrito ({cart.length})</Link></li>
           {role === "admin" && (
             <>
-              <li><Link to="/admin" onClick={() => setMenuOpen(false)}>Admin</Link></li>
+              <li><Link to="/admin" onClick={() => setMenuOpen(false)}>Administracion</Link></li>
               <li><Link to="/users" onClick={() => setMenuOpen(false)}>Usuarios</Link></li>
-              <li><Link to="/agregarproducto" onClick={() => setMenuOpen(false)}>Agregar Producto</Link></li>
             </>
           )}
           <li><Link to="/profile" onClick={() => setMenuOpen(false)}>Perfil</Link></li>
