@@ -4,7 +4,7 @@ import AdminDashboard from "./components/Administracion/Administracion";
 import ProductList from "./components/ProductList/ProductList";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Home from "./components/Home/Home";
-import ProductListCliente from "./components/ProducListCliente/ProductListCliente";
+import Productos from "./components/Productos/Productos";
 import ProductDetail from "./components/ProductDetail/ProductDetail";
 import Navbar from "./components/Navbar/Navbar";
 import { CartProvider } from "./context/CartContext";
@@ -14,6 +14,7 @@ import Profile from "./components/Profile/Profile";
 import Cart from "./components/Cart/Cart";
 import Orders from "./components/Orders/Orders";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+
 
 
 function App() {
@@ -26,7 +27,7 @@ function App() {
         <Route path="/admin/products" element={<ProductList />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/" element={<Home />} />
-        <Route path="/products" element={<ProductListCliente />} />
+        <Route path="/productos" element={<Productos />} />
         <Route path="/product/:id" element={<ProductDetail />} />
         {/*<Route path="/cart" element={<Cart />} />*/}
 

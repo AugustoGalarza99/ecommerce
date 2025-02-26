@@ -37,7 +37,7 @@ function Navbar() {
         </div>
         <ul className={`nav-links ${menuOpen ? "active" : ""}`}>
           <li><Link to="/" onClick={() => setMenuOpen(false)}>Home</Link></li>
-          <li><Link to="/products" onClick={() => setMenuOpen(false)}>Productos</Link></li>
+          <li><Link to="/productos" onClick={() => setMenuOpen(false)}>Productos</Link></li>
           <li><Link to="/cart" onClick={() => setMenuOpen(false)}>Carrito ({cart.length})</Link></li>
           {role === "admin" && (
             <>

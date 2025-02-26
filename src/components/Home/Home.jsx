@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import { db } from "../../firebaseConfig";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import Carousel from "../Carousel/Carousel";
+import { Link } from "react-router-dom";
 import "./Home.css";
 
 function Home() {
   const [categorias, setCategorias] = useState([]);
   const [productosDestacados, setProductosDestacados] = useState([]);
+  const [productosEnOferta, setProductosEnOferta] = useState([]);
 
   useEffect(() => {
     const fetchCategorias = async () => {
@@ -36,8 +38,23 @@ function Home() {
       }
     };
 
+    const fetchProductosEnOferta = async () => {
+      try {
+        const q = query(collection(db, "products"), where("discount", ">", 0));
+        const querySnapshot = await getDocs(q);
+        const productosList = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setProductosEnOferta(productosList);
+      } catch (error) {
+        console.error("Error fetching productos en oferta:", error);
+      }
+    };
+
     fetchCategorias();
     fetchProductosDestacados();
+    fetchProductosEnOferta();
   }, []);
 
   return (
@@ -63,26 +80,47 @@ function Home() {
         <h2>Productos Destacados</h2>
         <div className="products-grid">
           {productosDestacados.map(producto => (
-            <div key={producto.id} className="product-card">
-              <img src={producto.imageUrl || "https://via.placeholder.com/200"} alt={producto.name} />
-              {producto.discount && producto.discount > 0 && (
-                <div className="discount-badge">
-                  {producto.discount}% OFF
-                </div>
-              )}
-              <h3>{producto.name}</h3>
-              <p className={producto.discount ? "original-price" : ""}>
-                ${producto.price.toFixed(2)}
-              </p>
-              {producto.discount && producto.discount > 0 && (
-                <p className="discounted-price">
-                  ${((producto.price * (1 - producto.discount / 100))).toFixed(2)}
-                </p>
-              )}
-              {/*<p className="installments">
-                Hasta {Math.floor(producto.price / 100)} cuotas sin interés de ${(producto.price / Math.floor(producto.price / 100)).toFixed(2)}
-              </p>*/}
-            </div>
+            <Link to={`/product/${producto.id}`} key={producto.id} className="product-card-link">
+              <div className="product-card">
+                <img src={producto.imageUrl || "https://via.placeholder.com/200"} alt={producto.name} />
+                <h3>{producto.name}</h3>
+                {producto.price && producto.price > 0 && (
+                  <p className={producto.discount ? "original-price" : ""}>
+                    ${producto.price.toFixed(2)}
+                  </p>
+                )}
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* Productos en oferta */}
+      <div className="featured-products-section">
+        <h2>Ofertas Especiales</h2>
+        <div className="products-grid">
+          {productosEnOferta.map(producto => (
+            <Link to={`/product/${producto.id}`} key={producto.id} className="product-card-link">
+              <div className="product-card">
+                <img src={producto.imageUrl || "https://via.placeholder.com/200"} alt={producto.name} />
+                {producto.discount && producto.discount > 0 && (
+                  <div className="discount-badge">
+                    {producto.discount}% OFF
+                  </div>
+                )}
+                <h3>{producto.name}</h3>
+                {producto.price && producto.price > 0 && (
+                  <p className={producto.discount ? "original-price" : ""}>
+                    ${producto.price.toFixed(2)}
+                  </p>
+                )}
+                {producto.discount && producto.discount > 0 && producto.price && producto.price > 0 && (
+                  <p className="discounted-price">
+                    ${((producto.price * (1 - producto.discount / 100))).toFixed(2)}
+                  </p>
+                )}
+              </div>
+            </Link>
           ))}
         </div>
       </div>

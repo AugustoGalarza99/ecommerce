@@ -87,6 +87,16 @@ h2 {
   margin: 5px 0;
 }
 
+.product-card-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.product-card-link:hover .product-card {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
 @media (max-width: 768px) {
   .categories-grid, .products-grid {
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
