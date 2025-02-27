@@ -1,105 +1,105 @@
+/* Estilos generales para el detalle del producto */
 .product-detail {
-  max-width: 1200px;
-  margin: 80px auto 20px;
   display: flex;
-  gap: 20px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   padding: 20px;
-  font-family: 'Arial', sans-serif;
+  gap: 20px;
+  max-width: 1200px;
+  margin: auto;
 }
 
+/* Estilos para la imagen del producto */
 .product-image img {
   width: 100%;
-  max-width: 500px;
+  max-width: 400px;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Contenedor de información */
 .product-info {
-  flex: 1;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 600px;
 }
 
 .product-info h2 {
+  font-size: 2rem;
   color: #333;
-  font-size: 24px;
-  margin-bottom: 10px;
+}
+
+.price, .original-price, .discounted-price {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 10px 0;
 }
 
 .original-price {
   text-decoration: line-through;
   color: #888;
-  margin: 5px 0;
-  font-size: 16px;
 }
 
 .discounted-price {
-  color: #ff4444;
-  font-size: 20px;
-  font-weight: bold;
-  margin: 5px 0;
+  color: #d9534f;
 }
 
-.price {
-  color: #333;
-  font-size: 20px;
-  font-weight: bold;
-  margin: 5px 0;
-}
-
+/* Etiqueta de descuento */
 .discount-badge {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background-color: #ff4444;
-  color: #fff;
+  background-color: #d9534f;
+  color: white;
   padding: 5px 10px;
-  border-radius: 5px;
-  font-size: 14px;
+  font-size: 1rem;
   font-weight: bold;
+  border-radius: 5px;
+  display: inline-block;
+  margin-top: 5px;
 }
 
+/* Selector de cantidad */
 .quantity-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   margin: 15px 0;
 }
 
 .quantity-selector input {
-  padding: 5px;
   width: 60px;
-  margin-left: 10px;
-  border: 1px solid #e0e0e0;
+  padding: 5px;
+  font-size: 1rem;
+  text-align: center;
+  border: 1px solid #ccc;
   border-radius: 5px;
 }
 
+/* Botón de agregar al carrito */
 button {
+  background-color: #28a745;
+  color: white;
   padding: 10px 20px;
+  font-size: 1.2rem;
   border: none;
   border-radius: 5px;
-  background-color: #4CAF50;
-  color: #fff;
   cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
+  transition: background 0.3s;
 }
+
 
 button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
 }
 
-button:hover:not(:disabled) {
-  background-color: #45a049;
-}
-
-@media (max-width: 768px) {
+/* Diseño responsivo */
+@media (min-width: 768px) {
   .product-detail {
-    flex-direction: column;
-    margin-top: 60px;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 40px;
   }
 
-  .product-image img {
-    max-width: 100%;
+  .product-info {
+    text-align: left;
   }
 }

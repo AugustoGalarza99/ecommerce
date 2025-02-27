@@ -1,12 +1,15 @@
 import { useState } from "react";
-import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../../firebaseConfig";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
-import { FaGoogle, FaFacebook, FaEnvelope } from "react-icons/fa";
+import { FaGoogle, FaEnvelope, FaLock } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 import "./Login.css";
 
 function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -15,10 +18,9 @@ function Login() {
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-
       const userDocRef = doc(db, "users", user.uid);
       const userDoc = await getDoc(userDocRef);
-
+      
       if (!userDoc.exists()) {
         await setDoc(userDocRef, {
           uid: user.uid,
@@ -26,8 +28,6 @@ function Login() {
           displayName: user.displayName,
           role: "user",
           photoURL: user.photoURL || "",
-          address: "",
-          phone: "",
         });
       }
 
@@ -38,37 +38,63 @@ function Login() {
     }
   };
 
-  const handleLogout = () => {
-    auth.signOut().then(() => {
-      localStorage.removeItem("user");
-      setError("");
-      navigate("/");
-    }).catch(err => setError("Error al cerrar sesión: " + err.message));
+  const handleEmailLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      localStorage.setItem("user", JSON.stringify(userCredential.user));
+      navigate("/profile");
+    } catch (err) {
+      setError("Error al iniciar sesión: " + err.message);
+    }
   };
 
-  const isLoggedIn = !!localStorage.getItem("user");
-
   return (
-    <div className="login-dropdown">
-      {isLoggedIn ? (
-        <div className="logged-in">
-          <p>Bienvenido, {JSON.parse(localStorage.getItem("user")).displayName}</p>
-          <button onClick={handleLogout} className="logout-btn">Cerrar Sesión</button>
+    <div className="form">
+      <h2>Iniciar Sesión</h2>
+
+      {error && <p className="error-message">{error}</p>}
+
+      <form onSubmit={handleEmailLogin}>
+        <div className="flex-column">
+          <label>Email</label>
+          <div className="inputForm">
+            <FaEnvelope className="icon" />
+            <input 
+              type="email" 
+              className="input"
+              placeholder="Ingresa tu email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
         </div>
-      ) : (
-        <div className="login-options">
-          {error && <p className="error-message">{error}</p>}
-          <button onClick={handleGoogleLogin} className="login-btn google">
-            <FaGoogle /> Iniciar con Google
-          </button>
-          <button className="login-btn facebook" disabled>
-            <FaFacebook /> Iniciar con Facebook
-          </button>
-          <button className="login-btn email" disabled>
-            <FaEnvelope /> Recibir código por email
-          </button>
+
+        <div className="flex-column">
+          <label>Contraseña</label>
+          <div className="inputForm">
+            <FaLock className="icon" />
+            <input 
+              type="password"
+              className="input"
+              placeholder="Ingresa tu contraseña"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
         </div>
-      )}
+
+        <button type="submit" className="button-submit">Ingresar</button>
+      </form>
+
+      <p className="p">O inicia sesión con</p>
+
+      <button className="btn" onClick={handleGoogleLogin}>
+        <FcGoogle className="google-icon" />
+        Iniciar sesión con Google
+      </button>
     </div>
   );
 }

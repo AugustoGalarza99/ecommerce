@@ -1,104 +1,114 @@
+/* Estilos generales */
 .home {
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
   font-family: 'Arial', sans-serif;
-  background-color: #fff;
+  color: #333;
 }
 
-.categories-section, .featured-products-section {
+/* Sección de productos destacados y ofertas */
+.featured-products-section {
   margin-top: 40px;
+  text-align: center;
 }
 
-h2 {
-  color: #333;
-  font-size: 24px;
+.featured-products-section h2 {
+  font-size: 2rem;
+  font-weight: bold;
   margin-bottom: 20px;
-  text-align: center;
+  color: #222;
 }
 
-.categories-grid, .products-grid {
+.products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
-  padding: 20px;
+  justify-content: center;
+  align-items: stretch;
 }
 
-.category-card, .product-card {
-  border: 1px solid #e0e0e0;
-  border-radius: 10px;
-  overflow: hidden;
-  text-align: center;
-  background-color: #fff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
-}
-
-.category-card:hover, .product-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
-
-.category-card img, .product-card img {
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
-}
-
-.category-card p, .product-card h3 {
-  margin: 10px 0;
-  color: #333;
-  font-size: 16px;
-}
-
-.product-card {
-  position: relative;
-}
-
-.discount-badge {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background-color: #ff4444;
-  color: #fff;
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-size: 14px;
-  font-weight: bold;
-}
-
-.original-price {
-  text-decoration: line-through;
-  color: #888;
-  margin: 5px 0;
-  font-size: 14px;
-}
-
-.discounted-price {
-  color: #ff4444;
-  font-size: 18px;
-  font-weight: bold;
-  margin: 5px 0;
-}
-
-.installments {
-  color: #666;
-  font-size: 12px;
-  margin: 5px 0;
-}
-
+/* Tarjetas de producto */
 .product-card-link {
   text-decoration: none;
   color: inherit;
 }
 
-.product-card-link:hover .product-card {
+.product-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  text-align: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  overflow: hidden;
+}
+
+.product-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
+.product-card img {
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  border-radius: 8px;
+  flex-grow: 1;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto;
+}
+
+.product-card h3 {
+  font-size: 1.2rem;
+  margin: 10px 0;
+  flex-grow: 1;
+}
+
+/* Precios */
+.original-price {
+  text-decoration: line-through;
+  color: #888;
+}
+
+.discounted-price {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #e63946;
+}
+
+/* Badge de descuento */
+.discount-badge {
+  position: absolute;
+  top: 30px;
+  left: 10px;
+  background: #e63946;
+  color: white;
+  padding: 5px 15px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  transform: rotate(-45deg);
+}
+
+/* Responsividad */
 @media (max-width: 768px) {
-  .categories-grid, .products-grid {
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  .featured-products-section h2 {
+    font-size: 1.5rem;
+  }
+
+  .product-card {
+    padding: 10px;
+  }
+
+  .product-card h3 {
+    font-size: 1rem;
   }
 }

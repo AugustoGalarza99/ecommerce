@@ -1,25 +1,98 @@
 .profile-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 40px;
-    background: #ffffff;
-    border-radius: 16px;
-    margin: 20px auto;
-    max-width: 600px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin: 100px auto;
+  max-width: 500px;
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+.profile-pic {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #2d79f3;
+  margin-bottom: 10px;
+  background-color: #ddd;
+}
+
+.profile-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.profile-pic {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #2d79f3;
+  margin-bottom: 10px;
+}
+
+.email-text {
+  color: #555;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.input-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1.5px solid #ddd;
+  font-size: 14px;
+  transition: border 0.2s;
+}
+
+.input-group input:focus {
+  border: 1.5px solid #2d79f3;
+  outline: none;
+}
+
+.save-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #2d79f3;
+  border: none;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.save-button:hover {
+  background-color: #1a5bcc;
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+  .profile-container {
+    width: 90%;
+    padding: 20px;
   }
-  
-  .profile-pic {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    margin: 20px 0;
-  }
-  
-  .profile-container input,
-  .profile-container button {
-    width: 100%;
-    max-width: 300px;
-    margin-bottom: 20px;
-  }
+}

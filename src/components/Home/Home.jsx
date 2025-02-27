@@ -62,19 +62,6 @@ function Home() {
       {/* Carrusel principal */}
       <Carousel />
 
-      {/* Selector de categorías */}
-      <div className="categories-section">
-        <h2>Categorías</h2>
-        <div className="categories-grid">
-          {categorias.map(categoria => (
-            <div key={categoria.id} className="category-card">
-              <img src={categoria.imagen || "https://via.placeholder.com/150"} alt={categoria.nombre} />
-              <p>{categoria.nombre}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
       {/* Productos destacados */}
       <div className="featured-products-section">
         <h2>Productos Destacados</h2>
