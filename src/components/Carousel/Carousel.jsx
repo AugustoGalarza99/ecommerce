@@ -1,22 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { db } from "../../firebaseConfig";
+import { collection, getDocs } from "firebase/firestore";
 import "./Carousel.css";
 
 function Carousel() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const slides = [
-    {
-      image: "https://via.placeholder.com/1200x400/6B48FF/FFFFFF?text=Banner+1",
-      title: "¡VUELTA A CLASES SHIPIN!",
-      subtitle: "MEGA OFERTAS",
-      description: "Envíos Turbo en el día o 24hs (Ciudad de Córdoba)"
-    },
-    {
-      image: "https://via.placeholder.com/1200x400/FF6B6B/FFFFFF?text=Banner+2",
-      title: "TECNOLOGÍA AL ALCANCE",
-      subtitle: "DESCUENTOS IMPERDIBLES",
-      description: "Envíos gratis a todo el país"
-    }
-  ];
+  const [slides, setSlides] = useState([]);
+
+  useEffect(() => {
+    const fetchBanners = async () => {
+      const querySnapshot = await getDocs(collection(db, "banners"));
+      const bannerData = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      // Sort by order field
+      const sortedBanners = bannerData.sort((a, b) => a.order - b.order);
+      setSlides(sortedBanners);
+    };
+
+    fetchBanners();
+  }, []);
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % slides.length);
@@ -26,22 +30,40 @@ function Carousel() {
     setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
   };
 
+  // Optional: Auto-advance slides
+  useEffect(() => {
+    const interval = setInterval(() => {
+      nextSlide();
+    }, 5000); // Change slide every 5 seconds
+    return () => clearInterval(interval);
+  }, [slides.length]);
+
+  if (slides.length === 0) {
+    return <div className="carousel">Loading...</div>;
+  }
+
   return (
     <div className="carousel">
-      <div className="carousel-slide" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
+      <div
+        className="carousel-slide"
+        style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+      >
         {slides.map((slide, index) => (
-          <div key={index} className="slide">
+          <div key={slide.id} className="slide">
             <img src={slide.image} alt={`Slide ${index + 1}`} />
-            <div className="slide-content">
-              <h1>{slide.title}</h1>
-              <h2>{slide.subtitle}</h2>
-              <p>{slide.description}</p>
-            </div>
           </div>
         ))}
       </div>
-      <button className="carousel-button prev" onClick={prevSlide}>&lt;</button>
-      <button className="carousel-button next" onClick={nextSlide}>&gt;</button>
+      {slides.length > 1 && (
+        <>
+          <button className="carousel-button prev" onClick={prevSlide}>
+            &#8249;
+          </button>
+          <button className="carousel-button next" onClick={nextSlide}>
+            &#8250;
+          </button>
+        </>
+      )}
     </div>
   );
 }

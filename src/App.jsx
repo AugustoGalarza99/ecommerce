@@ -14,6 +14,7 @@ import Profile from "./components/Profile/Profile";
 import Cart from "./components/Cart/Cart";
 import Orders from "./components/Orders/Orders";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+import AdminBanner from "./components/AdminBanner/AdminBanner";
 
 
 
@@ -21,10 +22,11 @@ function App() {
   return (
     <CartProvider>
     <Router>
-      <Navbar />
+      <Navbar /> 
       <Routes>
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/admin/products" element={<ProductList />} />
+        <Route path="/admin/fotosbanner" element={<AdminBanner />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/" element={<Home />} />
         <Route path="/productos" element={<Productos />} />

@@ -1,0 +1,57 @@
+.admin-banner {
+    padding: 20px;
+  }
+  
+  .upload-section {
+    margin-bottom: 20px;
+  }
+  
+  .preview-container {
+    margin: 10px 0;
+  }
+  
+  .image-preview {
+    max-width: 200px;
+    max-height: 150px;
+    object-fit: cover;
+  }
+  
+  .banners-list {
+    display: grid;
+    gap: 20px;
+  }
+  
+  .banner-item {
+    border: 1px solid #ddd;
+    padding: 10px;
+    cursor: move;
+    background: #fff;
+  }
+  
+  .banner-item img {
+    max-width: 300px;
+    max-height: 200px;
+    object-fit: cover;
+  }
+  
+  .banner-item.dragging {
+    opacity: 0.5;
+  }
+  
+  .banner-item span {
+    display: block;
+    margin: 5px 0;
+  }
+  
+  button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background: #0056b3;
+  }

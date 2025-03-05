@@ -28,7 +28,7 @@ function Navbar() {
     <nav className="navbar">
       <div className="navbar-container">
         <h1 className="logo">
-          <Link to="/">Ecommerce</Link>
+          <Link to="/">Importados al costo</Link>
         </h1>
         <div className={`menu-toggle ${menuOpen ? "open" : ""}`} onClick={() => setMenuOpen(!menuOpen)}>
           <span className="bar"></span>
