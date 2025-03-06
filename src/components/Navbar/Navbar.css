@@ -17,16 +17,10 @@
   margin: 0 auto;
 }
 
-.logo a {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #2d3748;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.logo a:hover {
-  color: #4c51bf;
+.navbar-logo img {
+  width: 80px;
+  height: auto;
+  cursor: pointer;
 }
 
 /* Estilos del menú */

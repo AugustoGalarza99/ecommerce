@@ -5,6 +5,7 @@ import { auth, db } from "../../firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { useCart } from "../../context/CartContext";
+import logo from "../../../public/importado.png";
 import "./Navbar.css";
 
 function Navbar() {
@@ -27,21 +28,26 @@ function Navbar() {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <h1 className="logo">
-          <Link to="/">Importados al costo</Link>
-        </h1>
+        {/* Logo centrado y con enlace a Home */}
+        <Link to="/" className="navbar-logo">
+          <img src={logo} alt="Logo de la tienda" />
+        </Link>
+
+        {/* Botón del menú hamburguesa */}
         <div className={`menu-toggle ${menuOpen ? "open" : ""}`} onClick={() => setMenuOpen(!menuOpen)}>
           <span className="bar"></span>
           <span className="bar"></span>
           <span className="bar"></span>
         </div>
+
+        {/* Menú de navegación */}
         <ul className={`nav-links ${menuOpen ? "active" : ""}`}>
           <li><Link to="/" onClick={() => setMenuOpen(false)}>Home</Link></li>
           <li><Link to="/productos" onClick={() => setMenuOpen(false)}>Productos</Link></li>
           <li><Link to="/cart" onClick={() => setMenuOpen(false)}>Carrito ({cart.length})</Link></li>
           {role === "admin" && (
             <>
-              <li><Link to="/admin" onClick={() => setMenuOpen(false)}>Administracion</Link></li>
+              <li><Link to="/admin" onClick={() => setMenuOpen(false)}>Administración</Link></li>
               <li><Link to="/users" onClick={() => setMenuOpen(false)}>Usuarios</Link></li>
             </>
           )}

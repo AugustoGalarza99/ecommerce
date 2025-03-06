@@ -8,6 +8,7 @@ import "./ProductDetail.css";
 function ProductDetail() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useCart();
   const navigate = useNavigate();
@@ -19,11 +20,13 @@ function ProductDetail() {
         if (productDoc.exists()) {
           setProduct({ id: productDoc.id, ...productDoc.data() });
         } else {
-          navigate("/not-found"); // Página de error si el producto no existe
+          navigate("/not-found");
         }
       } catch (error) {
         console.error("Error fetching product:", error);
         navigate("/not-found");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -31,7 +34,7 @@ function ProductDetail() {
   }, [id, navigate]);
 
   const handleAddToCart = () => {
-    if (product && product.stock >= quantity) {
+    if (product?.stock >= quantity) {
       addToCart({ ...product, quantity });
       alert("Producto añadido al carrito");
       navigate("/cart");
@@ -40,7 +43,22 @@ function ProductDetail() {
     }
   };
 
-  if (!product) return <div>Cargando...</div>;
+  if (loading) return <div className="loading">Cargando...</div>;
+
+  if (!product) return <div className="error">Producto no encontrado</div>;
+
+  const formattedPrice = product.price?.toLocaleString("es-AR", {
+    style: "currency",
+    currency: "ARS",
+  });
+
+  const discountedPrice =
+    product.discount > 0
+      ? (product.price * (1 - product.discount / 100)).toLocaleString("es-AR", {
+          style: "currency",
+          currency: "ARS",
+        })
+      : null;
 
   return (
     <div className="product-detail">
@@ -49,21 +67,20 @@ function ProductDetail() {
       </div>
       <div className="product-info">
         <h2>{product.name}</h2>
-        {product.discount && product.discount > 0 && product.price && product.price > 0 && (
+        {product.discount > 0 ? (
           <>
-            <p className="original-price">${product.price.toFixed(2)}</p>
-            <p className="discounted-price">
-              ${(product.price * (1 - product.discount / 100)).toFixed(2)}
-            </p>
+            <p className="original-price">{formattedPrice}</p>
+            <p className="discounted-price">{discountedPrice}</p>
             <div className="discount-badge">{product.discount}% OFF</div>
           </>
+        ) : (
+          <p className="price">{formattedPrice}</p>
         )}
-        {!product.discount && product.price && product.price > 0 && (
-          <p className="price">${product.price.toFixed(2)}</p>
-        )}
-        <p>Stock disponible: {product.stock > 0 ? product.stock : "Sin stock"}</p>
-        <p>Categoría: {product.category || "Sin categoría"}</p>
-        <p>Descripción: {product.description || "Sin descripción"}</p>
+        <p className={`stock ${product.stock > 0 ? "in-stock" : "out-of-stock"}`}>
+          {product.stock > 0 ? `Stock disponible: ${product.stock}` : "Sin stock"}
+        </p>
+        <p className="category">Categoría: {product.category || "Sin categoría"}</p>
+        <p className="description">{product.description || "Sin descripción"}</p>
         <div className="quantity-selector">
           <label>Cantidad: </label>
           <input
@@ -74,7 +91,7 @@ function ProductDetail() {
             onChange={(e) => setQuantity(Math.max(1, Math.min(product.stock || 1, Number(e.target.value))))}
           />
         </div>
-        <button onClick={handleAddToCart} disabled={product.stock === 0}>
+        <button onClick={handleAddToCart} disabled={product.stock === 0} className="add-to-cart">
           Agregar al Carrito
         </button>
       </div>
