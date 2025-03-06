@@ -1,68 +1,48 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../../firebaseConfig";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import Carousel from "../Carousel/Carousel";
 import { Link } from "react-router-dom";
 import "./Home.css";
 
 function Home() {
   const [categorias, setCategorias] = useState([]);
+  const [productos, setProductos] = useState([]);
   const [productosDestacados, setProductosDestacados] = useState([]);
   const [productosEnOferta, setProductosEnOferta] = useState([]);
 
   useEffect(() => {
-    const fetchCategorias = async () => {
+    const fetchData = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "categories"));
-        const categoriasList = querySnapshot.docs.map(doc => ({
+        // Traemos todas las categorías
+        const categoriasSnap = await getDocs(collection(db, "categories"));
+        setCategorias(categoriasSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+
+        // Traemos todos los productos de una vez (menos consumo de Firebase)
+        const productosSnap = await getDocs(collection(db, "products"));
+        const allProducts = productosSnap.docs.map(doc => ({
           id: doc.id,
           ...doc.data()
         }));
-        setCategorias(categoriasList);
+
+        setProductos(allProducts);
+
+        // Filtramos productos destacados y en oferta en el front
+        setProductosDestacados(allProducts.filter(p => p.destacado === true));
+        setProductosEnOferta(allProducts.filter(p => p.discount > 0));
       } catch (error) {
-        console.error("Error fetching categorias:", error);
+        console.error("Error fetching data:", error);
       }
     };
 
-    const fetchProductosDestacados = async () => {
-      try {
-        const q = query(collection(db, "products"), where("destacado", "==", true));
-        const querySnapshot = await getDocs(q);
-        const productosList = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
-        setProductosDestacados(productosList);
-      } catch (error) {
-        console.error("Error fetching productos destacados:", error);
-      }
-    };
-
-    const fetchProductosEnOferta = async () => {
-      try {
-        const q = query(collection(db, "products"), where("discount", ">", 0));
-        const querySnapshot = await getDocs(q);
-        const productosList = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
-        setProductosEnOferta(productosList);
-      } catch (error) {
-        console.error("Error fetching productos en oferta:", error);
-      }
-    };
-
-    fetchCategorias();
-    fetchProductosDestacados();
-    fetchProductosEnOferta();
+    fetchData();
   }, []);
 
   return (
     <div className="home">
-      {/* Carrusel principal */}
       <Carousel />
 
-      {/* Productos destacados */}
+      {/* Productos Destacados */}
       <div className="featured-products-section">
         <h2>Productos Destacados</h2>
         <div className="products-grid">
@@ -82,7 +62,7 @@ function Home() {
         </div>
       </div>
 
-      {/* Productos en oferta */}
+      {/* Productos en Oferta */}
       <div className="featured-products-section">
         <h2>Ofertas Especiales</h2>
         <div className="products-grid">
@@ -91,9 +71,7 @@ function Home() {
               <div className="product-card">
                 <img src={producto.imageUrl || "https://via.placeholder.com/200"} alt={producto.name} />
                 {producto.discount && producto.discount > 0 && (
-                  <div className="discount-badge">
-                    {producto.discount}% OFF
-                  </div>
+                  <div className="discount-badge">{producto.discount}% OFF</div>
                 )}
                 <h3>{producto.name}</h3>
                 {producto.price && producto.price > 0 && (
@@ -101,7 +79,7 @@ function Home() {
                     ${producto.price.toFixed(2)}
                   </p>
                 )}
-                {producto.discount && producto.discount > 0 && producto.price && producto.price > 0 && (
+                {producto.discount && producto.discount > 0 && producto.price && (
                   <p className="discounted-price">
                     ${((producto.price * (1 - producto.discount / 100))).toFixed(2)}
                   </p>

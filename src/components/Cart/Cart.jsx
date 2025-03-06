@@ -1,57 +1,59 @@
 import { useCart } from "../../context/CartContext";
 import { useNavigate } from "react-router-dom";
-import { db } from "../../firebaseConfig";
-import { doc, addDoc, collection } from "firebase/firestore";
 import "./Cart.css";
 
 function Cart() {
   const { cart, clearCart, removeFromCart } = useCart();
   const navigate = useNavigate();
 
-  const handleCheckout = async () => {
-    if (!auth.currentUser) {
-      navigate("/login");
-      return;
-    }
+  // Calcular total
+  const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
-    const order = {
-      userId: auth.currentUser.uid,
-      items: cart,
-      date: new Date().toISOString(),
-      status: "pending",
-    };
+  // Generar mensaje para WhatsApp
+  const handleCheckout = () => {
+    if (cart.length === 0) return;
 
-    try {
-      await addDoc(collection(db, "orders"), order);
-      clearCart();
-      alert("Compra realizada con éxito");
-      navigate("/orders");
-    } catch (err) {
-      console.error("Error al finalizar compra:", err);
-      alert("Error al realizar la compra");
-    }
+    const mensaje = encodeURIComponent(
+      `¡Hola! Quiero comprar estos productos:\n\n` +
+      cart
+        .map((item) => `${item.quantity}x ${item.name} - $${(item.price * item.quantity).toFixed(2)}`)
+        .join("\n") +
+      `\n\nTotal: $${total.toFixed(2)}`
+    );
+
+    const numeroWhatsApp = "5493572438785"; // Reemplaza con el número de WhatsApp de la tienda
+    window.open(`https://wa.me/${numeroWhatsApp}?text=${mensaje}`, "_blank");
+
+    clearCart();
   };
 
   if (cart.length === 0) {
     return (
-      <div className="cart-dropdown empty">
+      <div className="cart-container empty">
         <p>Tu carrito está vacío</p>
       </div>
     );
   }
 
   return (
-    <div className="cart-dropdown">
-      <ul>
+    <div className="cart-container">
+      <h2>Tu Carrito</h2>
+      <ul className="cart-list">
         {cart.map((item, index) => (
           <li key={index} className="cart-item">
-            <span>{item.name} - ${item.price.toFixed(2)}</span>
-            <button onClick={() => removeFromCart(item)} className="remove-btn">Eliminar</button>
+            <img src={item.imageUrl} alt={item.name} className="cart-img" />
+            <div className="cart-details">
+              <h3>{item.name}</h3>
+              <p>${item.price.toFixed(2)} x {item.quantity}</p>
+              <p className="total-item">Subtotal: ${(item.price * item.quantity).toFixed(2)}</p>
+            </div>
+            <button onClick={() => removeFromCart(item)} className="remove-btn">✖</button>
           </li>
         ))}
       </ul>
-      <div className="cart-actions">
-        <button onClick={handleCheckout} className="checkout-btn">Finalizar Compra</button>
+      <div className="cart-summary">
+        <h3>Total: ${total.toFixed(2)}</h3>
+        <button onClick={handleCheckout} className="checkout-btn">Finalizar Compra por WhatsApp</button>
       </div>
     </div>
   );

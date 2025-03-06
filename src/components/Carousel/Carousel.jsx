@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { db } from "../../firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
 import "./Carousel.css";
+import Loader from "../Loader/Loader";
 
 function Carousel() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -12,15 +13,24 @@ function Carousel() {
       const querySnapshot = await getDocs(collection(db, "banners"));
       const bannerData = querySnapshot.docs.map((doc) => ({
         id: doc.id,
-        ...doc.data()
+        ...doc.data(),
       }));
-      // Sort by order field
       const sortedBanners = bannerData.sort((a, b) => a.order - b.order);
       setSlides(sortedBanners);
     };
 
     fetchBanners();
   }, []);
+
+  useEffect(() => {
+    if (slides.length === 0) return;
+
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [slides]);
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % slides.length);
@@ -30,16 +40,8 @@ function Carousel() {
     setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
   };
 
-  // Optional: Auto-advance slides
-  useEffect(() => {
-    const interval = setInterval(() => {
-      nextSlide();
-    }, 5000); // Change slide every 5 seconds
-    return () => clearInterval(interval);
-  }, [slides.length]);
-
   if (slides.length === 0) {
-    return <div className="carousel">Loading...</div>;
+    return <div className="carousel"><Loader /></div>;
   }
 
   return (
@@ -48,12 +50,13 @@ function Carousel() {
         className="carousel-slide"
         style={{ transform: `translateX(-${currentSlide * 100}%)` }}
       >
-        {slides.map((slide, index) => (
+        {slides.map((slide) => (
           <div key={slide.id} className="slide">
-            <img src={slide.image} alt={`Slide ${index + 1}`} />
+            <img src={slide.image} alt="Banner" />
           </div>
         ))}
       </div>
+
       {slides.length > 1 && (
         <>
           <button className="carousel-button prev" onClick={prevSlide}>
@@ -62,6 +65,16 @@ function Carousel() {
           <button className="carousel-button next" onClick={nextSlide}>
             &#8250;
           </button>
+
+          <div className="carousel-indicators">
+            {slides.map((_, index) => (
+              <span
+                key={index}
+                className={`indicator ${index === currentSlide ? "active" : ""}`}
+                onClick={() => setCurrentSlide(index)}
+              ></span>
+            ))}
+          </div>
         </>
       )}
     </div>

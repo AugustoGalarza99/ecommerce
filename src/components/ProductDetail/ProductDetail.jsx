@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { db } from "../../firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
 import { useCart } from "../../context/CartContext";
+import Loader from "../Loader/Loader";
 import "./ProductDetail.css";
 
 function ProductDetail() {
@@ -20,18 +21,18 @@ function ProductDetail() {
         if (productDoc.exists()) {
           setProduct({ id: productDoc.id, ...productDoc.data() });
         } else {
-          navigate("/not-found");
+          setProduct(null);
         }
       } catch (error) {
         console.error("Error fetching product:", error);
-        navigate("/not-found");
+        setProduct(null);
       } finally {
         setLoading(false);
       }
     };
 
     fetchProduct();
-  }, [id, navigate]);
+  }, [id]);
 
   const handleAddToCart = () => {
     if (product?.stock >= quantity) {
@@ -43,7 +44,7 @@ function ProductDetail() {
     }
   };
 
-  if (loading) return <div className="loading">Cargando...</div>;
+  if (loading) return <div className="loading"><Loader /></div>;
 
   if (!product) return <div className="error">Producto no encontrado</div>;
 
