@@ -4,6 +4,7 @@ import { db } from "../../firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
 import { useCart } from "../../context/CartContext";
 import Loader from "../Loader/Loader";
+import Swal from "sweetalert2";
 import "./ProductDetail.css";
 
 function ProductDetail() {
@@ -37,10 +38,37 @@ function ProductDetail() {
   const handleAddToCart = () => {
     if (product?.stock >= quantity) {
       addToCart({ ...product, quantity });
-      alert("Producto añadido al carrito");
-      navigate("/cart");
+
+      // Mostrar mensaje de éxito con SweetAlert2
+      Swal.fire({
+        icon: "success",
+        title: "Producto añadido al carrito",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+
+      // Preguntar si seguir comprando o ir al carrito
+      setTimeout(() => {
+        Swal.fire({
+          title: "¿Qué deseas hacer?",
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonText: "Finalizar compra 🛒",
+          cancelButtonText: "Seguir comprando 🛍️",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            navigate("/cart");
+          } else {
+            navigate("/productos");
+          }
+        });
+      }, 1600);
+      
     } else {
-      alert("Stock insuficiente");
+      Swal.fire({
+        icon: "error",
+        title: "Stock insuficiente",
+      });
     }
   };
 

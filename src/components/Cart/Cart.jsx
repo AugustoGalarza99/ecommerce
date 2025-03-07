@@ -1,5 +1,6 @@
 import { useCart } from "../../context/CartContext";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import "./Cart.css";
 
 function Cart() {
@@ -8,6 +9,19 @@ function Cart() {
 
   // Calcular total
   const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
+  // Alertas personalizadas con SweetAlert2
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.onmouseenter = Swal.stopTimer;
+      toast.onmouseleave = Swal.resumeTimer;
+    },
+  });
 
   // Generar mensaje para WhatsApp
   const handleCheckout = () => {
@@ -25,6 +39,15 @@ function Cart() {
     window.open(`https://wa.me/${numeroWhatsApp}?text=${mensaje}`, "_blank");
 
     clearCart();
+  };
+
+  // Eliminar producto del carrito
+  const handleRemoveItem = (item) => {
+    removeFromCart(item);
+    Toast.fire({
+      icon: "success",
+      title: "Producto eliminado del carrito",
+    });
   };
 
   if (cart.length === 0) {
@@ -47,7 +70,7 @@ function Cart() {
               <p>${item.price.toFixed(2)} x {item.quantity}</p>
               <p className="total-item">Subtotal: ${(item.price * item.quantity).toFixed(2)}</p>
             </div>
-            <button onClick={() => removeFromCart(item)} className="remove-btn">✖</button>
+            <button onClick={() => handleRemoveItem(item)} className="remove-btn">✖</button>
           </li>
         ))}
       </ul>
