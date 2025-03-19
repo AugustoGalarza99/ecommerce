@@ -8,13 +8,13 @@ function ProductForm({ onSubmit, initialData, categories, onClose, loading }) {
     price: initialData?.price || "",
     stock: initialData?.stock || "",
     category: initialData?.category || "",
-    imageUrl: initialData?.imageUrl || "",
+    imageUrls: initialData?.imageUrls || [], // Array de URLs
     discount: initialData?.discount || "",
     destacado: initialData?.destacado || false,
   });
 
-  const [imageFile, setImageFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState(initialData?.imageUrl || null);
+  const [imageFiles, setImageFiles] = useState([]); // Guardar archivos de imágenes
+  const [imagePreviews, setImagePreviews] = useState(initialData?.imageUrls || []); // Guardar previsualizaciones
   const [placeholderText, setPlaceholderText] = useState("Descripción del producto...");
 
   useEffect(() => {
@@ -28,23 +28,24 @@ function ProductForm({ onSubmit, initialData, categories, onClose, loading }) {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
   };
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImageFile(file);
-      setImagePreview(URL.createObjectURL(file));
-    }
+    const files = Array.from(e.target.files); // Convertir FileList en array
+    setImageFiles(files);
+
+    // Generar previsualizaciones
+    const previews = files.map((file) => URL.createObjectURL(file));
+    setImagePreviews(previews);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData, imageFile);
+    onSubmit(formData, imageFiles); // Enviar imágenes como array
   };
 
   return (
@@ -59,14 +60,22 @@ function ProductForm({ onSubmit, initialData, categories, onClose, loading }) {
 
           <select name="category" value={formData.category} onChange={handleChange} required>
             <option value="">Selecciona una categoría</option>
-            {categories.map(cat => (
+            {categories.map((cat) => (
               <option key={cat.id} value={cat.name}>{cat.name}</option>
             ))}
           </select>
 
-          <input type="text" name="imageUrl" value={formData.imageUrl} onChange={handleChange} placeholder="URL de la imagen (opcional)" />
-          <input type="file" accept="image/*" onChange={handleImageChange} />
-          {imagePreview && <div className="image-preview"><img src={imagePreview} alt="Previsualización" /></div>}
+          {/* Input para subir múltiples imágenes */}
+          <input type="file" accept="image/*" multiple onChange={handleImageChange} />
+
+          {/* Previsualización de imágenes */}
+          {imagePreviews.length > 0 && (
+            <div className="image-preview">
+              {imagePreviews.map((preview, index) => (
+                <img key={index} src={preview} alt={`Previsualización ${index + 1}`} />
+              ))}
+            </div>
+          )}
 
           <input type="number" name="discount" value={formData.discount} onChange={handleChange} placeholder="Descuento (%)" min="0" max="100" />
           <label className="checkbox-label">
